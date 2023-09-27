@@ -1,0 +1,10 @@
+void mem_init();
+char *mem_get_value(char *var);
+void mem_set_value(char *var, char *value);
+void print_varmemory(int num_lines);
+int get_first_empty();
+char* mem_get_value_by_index(int index);
+void print_framememory(int num_lines);
+void remove_page(int index);
+void resetmem();
+void fresetmem();

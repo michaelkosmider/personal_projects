@@ -1,0 +1,4 @@
+conda create -n tf-gpu tensorflow-gpu
+conda activate tf-gpu
+conda install -c conda-forge matplotlib
+conda install -c anaconda scikit-learn 
