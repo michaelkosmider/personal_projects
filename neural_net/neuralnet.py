@@ -1,9 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import warnings
-from sklearn.base import BaseEstimator
 from sklearn.preprocessing import OneHotEncoder,OrdinalEncoder
 
+#math functions
 def softmax(x):
     x = x-np.max(x,0)[None,:]
     x = np.exp(x)
@@ -28,6 +28,7 @@ def drelu(x):
     x[x != 0] = 1
     return x
 
+#gradient descent implementation
 #for normal gradient descent set model.batch_size = 1
 def stochastic_gradient_descent(model):
 
@@ -58,7 +59,9 @@ def stochastic_gradient_descent(model):
             i += 1
         
         if(model.graph_progress):
-            accuracies.append(scorer(model,model.x_test,model.y_test))
+            score = scorer(model,model.x_test,model.y_test)
+            print("Epoch",c,". Accuracy:",score)
+            accuracies.append(score)
 
     if(model.graph_progress):
         plt.plot(np.arange(1,model.epochs+1),accuracies)
@@ -67,7 +70,9 @@ def stochastic_gradient_descent(model):
 def scorer(estimator,X,y):
     return np.sum(y == estimator.predict(X))/y.shape[0]
 
-class Neural_net(BaseEstimator):
+
+#neural network implementation
+class Neural_net():
 
     def __init__(self,shape=[100,100],activation='relu',learning_rate=0.01,epochs=50,batch_size=0.2,reg=0.1):
         
@@ -88,22 +93,12 @@ class Neural_net(BaseEstimator):
             self.f = hypertan
             self.df = dhypertan
 
-    # def get_params(self):
-
-    #     return {'shape':self.shape,
-    #             'activation':self.activation,
-    #             'learning_rate':self.learning_rate,
-    #             'epochs':self.epochs,
-    #             'batch_size':self.batch_size,
-    #             'self.reg':self.reg}
-
     def fit(self,x,y,x_test=None,y_test=None):
 
         self.encoder_ordinal = OrdinalEncoder()
 
         #storing the training data
         self.x=x
-
         self.encoder_1hot = OneHotEncoder(sparse_output=False)
         self.y=self.encoder_1hot.fit_transform(self.encoder_ordinal.fit_transform(y[:,None]))
 
@@ -130,8 +125,7 @@ class Neural_net(BaseEstimator):
             self.b_.append(np.random.uniform(0,0.1,size=[self.shape[i+1],1]))
         self.shape.pop()
         self.shape.pop(0)
-        # for w in self.w_:
-        #     print(w)
+
         #optimizing the weights
         stochastic_gradient_descent(self)
 
@@ -149,7 +143,7 @@ class Neural_net(BaseEstimator):
     
 #returns the gradient, which depends on four inputs w,b (current location in the parameter
 #space) and x,y (needed to evaluate cost of current location, and thus the gradient also depends on these)
-#as well as two coupled hyperparameters, activation/dactivation, which determine the form of the neural net
+#as well as two hyperparameters, activation/dactivation, which determine the form of the neural net
 
 #w,b is a list of arrays, where w[i] and b[i] are the weights and biases going into layer i
 #thus w[0] is an empty array, since no weights and biases go into layer 0 (the input layer)
