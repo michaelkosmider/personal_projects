@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
 	while(1) {		
 							
 		if(!previousWasOEF) printf("%c ",prompt);
-		//this variable simply exists to avoid printing the prompt twice when switching from batch to user input
+		//this variable exists to avoid printing the prompt twice when switching from batch to user input
 		previousWasOEF = 0;
 
 		//if we reach end of input file, redirect stdin
